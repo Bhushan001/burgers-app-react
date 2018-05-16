@@ -1,18 +1,42 @@
 import * as React from "react";
+import Toolbar from "../Navigation/Toolbar/Toolbar";
 import Aux from "./../../hoc/Aux";
+import SideDrawer from "./../Navigation/SideDrawer/SideDrawer";
 import * as style from "./Layout.css";
 
-interface ILayoutProps {
+export interface ILayoutProps {
   name?: string;
 }
+class Layout extends React.Component<ILayoutProps, any> {
+  constructor(props: any) {
+    super(props);
+    this.state = {
+      showSideDrawer: false
+    };
+  }
 
-const Layout: React.SFC<ILayoutProps> = props => {
-  return (
-    <Aux>
-      <div>Toolbar,SideDrawer,Backdrop</div>
-      <main className={style.contentArea}>{props.children}</main>
-    </Aux>
-  );
-};
+  public sideDrawerClosedHandler = () => {
+    this.setState({ showSideDrawer: false });
+  };
 
+  public sideDrawerToggleHandler = () => {
+    this.setState((prevState: any) => {
+      return {
+        showSideDrawer: !prevState.showSideDrawer
+      };
+    });
+  };
+  public render() {
+    return (
+      <Aux>
+        <Toolbar toggled={this.sideDrawerToggleHandler} />
+        <SideDrawer
+          open={this.state.showSideDrawer}
+          closed={this.sideDrawerClosedHandler}
+        />
+        <main className={style.contentArea}>{this.props.children}</main>
+      </Aux>
+    );
+  }
+}
 export default Layout;
